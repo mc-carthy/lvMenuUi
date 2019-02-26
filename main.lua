@@ -3,7 +3,9 @@ BUTTON_HEIGHT = 60
 local function newButton(text, callBack)
     return {
         text = text,
-        func = callBack
+        func = callBack,
+        clickedNow = false,
+        clickedLast = false
     }
 end
 
@@ -53,6 +55,8 @@ function love.draw()
     local mouseX, mouseY = love.mouse.getPosition()
 
     for i, button in ipairs(buttons) do
+        button.clickedLast = button.clickedNow
+
         local buttonX = screenWidth / 2 - buttonWidth / 2
         local buttonY = screenHeight / 2 - totalHeight / 2 + (i - 1) * (BUTTON_HEIGHT + margin)
 
@@ -60,10 +64,15 @@ function love.draw()
 
         if highlighted then
             love.graphics.setColor(unpack(buttonBgHighlightedColour))
+            button.clickedNow = love.mouse.isDown(1)
         else
             love.graphics.setColor(unpack(buttonBgColour))
         end
-        
+
+        if button.clickedNow and not button.clickedLast then
+            button.func()
+        end
+
         love.graphics.rectangle(
             'fill', 
             buttonX, buttonY,
