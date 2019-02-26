@@ -47,10 +47,23 @@ function love.draw()
     local buttonWidth = screenWidth / 3
     local margin = 20
     local totalHeight = (BUTTON_HEIGHT + margin) * #buttons
+
+    local buttonBgColour = { 0.75, 0.75, 0.75 }
+    local buttonBgHighlightedColour = { 1, 1, 1 }
+    local mouseX, mouseY = love.mouse.getPosition()
+
     for i, button in ipairs(buttons) do
         local buttonX = screenWidth / 2 - buttonWidth / 2
-        local buttonY = screenHeight / 2 - totalHeight / 2 + (i - 1) * (BUTTON_HEIGHT + margin),
-        love.graphics.setColor(0.75, 0.75, 0.75)
+        local buttonY = screenHeight / 2 - totalHeight / 2 + (i - 1) * (BUTTON_HEIGHT + margin)
+
+        local highlighted = mouseX > buttonX and mouseX < buttonX + buttonWidth and mouseY > buttonY and mouseY < buttonY + BUTTON_HEIGHT
+
+        if highlighted then
+            love.graphics.setColor(unpack(buttonBgHighlightedColour))
+        else
+            love.graphics.setColor(unpack(buttonBgColour))
+        end
+        
         love.graphics.rectangle(
             'fill', 
             buttonX, buttonY,
